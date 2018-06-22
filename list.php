@@ -1,3 +1,10 @@
+<?php
+
+if (!empty($_GET['NumberTest'])) {
+    header("Location:test.php?NumberTest=$_GET[NumberTest]");
+}
+?>
+
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -23,23 +30,14 @@ if ($handle = opendir("tests/")) {
     <?php
     foreach ($Testes as $key=>$value){
         ?>
-        <label><input type="radio"  name='name' value=<?=$value ?>><?=$value ?></label><br/>
+        <label><input type="radio"  name='NumberTest' value=<?=$value ?>><?=$value ?></label><br/>
         <?php
     }
     ?>
     <input type="submit" value="Выбрать" />
 </form >
 
-<?php
 
-if (!empty($_GET['name'])) {
-     echo "Выбрано";
-     echo $_GET['name'];
-     /*  session_start();
-       $_SESSION['count']=$value;*/
-       header('Location:test.php');
-    }
-?>
 
 </body>
 </html>
