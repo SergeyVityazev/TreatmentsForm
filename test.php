@@ -1,24 +1,26 @@
+
+
 <!DOCTYPE HTML>
 <html>
 <head>
 </head>
 <body>
 
+
 <?php
-/*phpinfo(32);
-session_start();*/
-$NumberTest=$_GET['name'];
-//$NumberTest='test2.json';
-echo "Вы выбрали тест ".$NumberTest;
+
+$NumberTest=$_GET['NumberTest'];
 $TestText=file_get_contents("tests/".$NumberTest);
+echo "Вы выбрали тест ".$NumberTest;
 $DecodeTestText=json_decode($TestText,true);
 
-echo $DecodeTestText;
-$stop=false;
-$N=1;
-$M=0;
+$right=0;
+$Noright=0;
+$N=0;
 ?>
-<form  method="POST">
+<form  method="post">
+    <p>Введите Ваше имя</p>
+    <label><input type="text" name="UserName"></label>
     <?php
     foreach ($DecodeTestText as $test) {
         foreach ($test as $inner_key => $questions) {
@@ -31,46 +33,43 @@ $M=0;
                     echo $question ;
                     echo "<br/>";
                 } elseif ($InInner_key !== "nameQ") {
-                    ?>
-                    <label><input type="radio" name=<?= (string)$N ?>> <?= $question ?></label>
-                    <?php
-                    $massivAnswer[] = $InInner_key;
-                    $N = $N + 1;
+                    if ($InInner_key=="yes"){
+                        ?> <label><input type="checkbox" name=<?=$right=$right+1 ?> value="right"> <?= $question ?></label>
+                    <?php }
+                    else{ ?>
+                        <label><input type="checkbox" name=<?=$Noright=$Noright+1 ?> value="Noright" > <?= $question ?></label>
+                    <?php  }
                 }
             }
-        }break;
+        }
     }
+
     ?>
 
     <br/>
     <input type="submit" value="Отправить" />
-
 </form >
 
-
 <?php
-$right=0;
-$Noright=0;
+
 if (!empty($_POST)) {
-    echo "<br/>";
-    $N = $N - 2;
-    for ($i = 0; $i <= $N; $i++) {
-        if (!empty($_POST[$i+1])) {
-            if ($massivAnswer[$i] == "yes")
-                $right = $right + 1;
-            else
-                $Noright = $Noright + 1;
-        }
+    $RightAnswer = 0;
+    $NoRightAnswer = 0;
+
+    foreach ($_POST as $key => $value) {
+        if ($value == 'right')
+            $RightAnswer = $RightAnswer + 1;
+        if ($value == 'Noright')
+            $NoRightAnswer = $NoRightAnswer + 1;
     }
-    echo "<br/>";
-    echo "Ваш результат:";
-    echo "<br/>";
-    echo $right . " Верных ответов";
-    echo "<br/>";
-    echo $Noright ." Неверных ответов";
+    echo "Уважаемый ".$_POST['UserName'] . " Ваш результат:";
+    echo "<br>";
+    echo "Верных ответов: ".$RightAnswer;
+    echo "<br>";
+    echo "Неверных ответов: ".$NoRightAnswer;
 }
 ?>
 
+
 </body>
 </html>
-
